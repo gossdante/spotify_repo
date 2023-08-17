@@ -23,6 +23,7 @@ IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 # Git 
 I will also add a bit about how to use git since this is my first time using it.
 pwd command shows current directory in git
+Other note. You can open a file using start FILENAME
 
 1. Open Git Bash
 
