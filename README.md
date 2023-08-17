@@ -20,6 +20,7 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO 
 LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
 IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -------------------------------------------------------------------------------------------------------------------------------------------
+<pre>
 # Git 
 I will also add a bit about how to use git since this is my first time using it.
 pwd command shows current directory in git
@@ -27,7 +28,7 @@ Other note. You can open a file using start FILENAME
 
 1. Open Git Bash
 
-2. Change Directory (Will be different on each computer) \n
+2. Change Directory (Will be different on each computer) 
 $ $ cd /c/Users/Dante/OneDrive/Desktop/
 
 3. Clone the repository from github (replace spotify with the actual repo)
@@ -67,3 +68,4 @@ git checkout
 
 How to merge branches
 git merge [branch]
+</pre>
