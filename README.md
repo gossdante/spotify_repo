@@ -27,7 +27,7 @@ Other note. You can open a file using start FILENAME
 
 1. Open Git Bash
 
-2. Change Directory (Will be different on each computer)
+2. Change Directory (Will be different on each computer) \n
 $ $ cd /c/Users/Dante/OneDrive/Desktop/
 
 3. Clone the repository from github (replace spotify with the actual repo)
