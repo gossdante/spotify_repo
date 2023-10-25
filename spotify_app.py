@@ -180,7 +180,7 @@ if st.button("Get saved songs"):
     b = SavedSongs()
     b['count'] = 1
     c = b.groupby('Artist_Name')['count'].sum()[0]
-    st.write(((num_loops+1-i),'Loops Left'))
+    #st.write(((num_loops+1-i),'Loops Left'))
 
     st.write('Your favorite artist is: ',c)
 
