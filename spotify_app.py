@@ -174,24 +174,24 @@ if st.button("How many saved songs do you have?"):
     a = NumSavedSongs()
     st.write('You Have:',a,'Saved Songs')
 
-#st.write('Press the button below to load in all your saved songs')
+st.write('Press the button below to load in all your saved songs')
 
-#if st.button("Get saved songs"):
-#    b = SavedSongs()
-#    b['count'] = 1
-#    c = b.groupby('Artist_Name')['count'].sum()[0]
-#    #st.write(((num_loops+1-i),'Loops Left'))
+if st.button("Get saved songs"):
+    b = SavedSongs()
+    b['count'] = 1
+    c = b.groupby('Artist_Name')['count'].sum()[0]
+    #st.write(((num_loops+1-i),'Loops Left'))
 
-#    st.write('Your favorite artist is: ',c)
+    st.write('Your favorite artist is: ',c)
 
 
-#st.write('---')
-#st.header("Make Playlist")
-#tempo = st.text_input('What target tempo would you like? Remember to press enter.')
-#tol = st.text_input('How much tolerance d you want? e.g. 2 bpm above and below is a tolerance of 4.')
-#namep = st.text_input('What would you like to name your playlist?')
+st.write('---')
+st.header("Make Playlist")
+tempo = st.text_input('What target tempo would you like? Remember to press enter.')
+tol = st.text_input('How much tolerance d you want? e.g. 2 bpm above and below is a tolerance of 4.')
+namep = st.text_input('What would you like to name your playlist?')
 
-#if st.button("Create Playlist"):
-#    songs,tracks = TempoRange(b,tempo,tol)
-#    p = PlaylistMaker(tracks,namep)
-#    st.write('Check your spotify')
+if st.button("Create Playlist"):
+    songs,tracks = TempoRange(b,tempo,tol)
+    p = PlaylistMaker(tracks,namep)
+    st.write('Check your spotify')
