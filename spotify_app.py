@@ -112,7 +112,7 @@ def SavedSongs():
         print((num_loops+1-i),'Loops Left')
         result = sp.current_user_saved_tracks(limit = 20, offset = (i*20), market = None)
         # sleep
-        time.sleep(5)# 5 second sleep
+        time.sleep(10)# 5 second sleep
         # Loop through saved tracks
         for item in result['items']:
             track = item['track']
@@ -183,13 +183,20 @@ if st.button("Get saved songs"):
     #st.write(((num_loops+1-i),'Loops Left'))
 
     st.write('Your favorite artist is: ',c)
-
+    
+st.download_button(
+   "Press to Download Your Saved Songs",
+   b,
+   "savedsongs.csv",
+   "text/csv",
+   key='download-csv'
+)
 
 st.write('---')
 st.header("Make Playlist")
 tempo = st.text_input('What target tempo would you like? Remember to press enter.')
 tol = st.text_input('How much tolerance d you want? e.g. 2 bpm above and below is a tolerance of 4.')
-namep = st.text_input('What would you like to name your playlist?')
+namep = st.text_input('What would you like to name yoxxur playlist?')
 
 if st.button("Create Playlist"):
     songs,tracks = TempoRange(b,tempo,tol)
