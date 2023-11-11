@@ -121,10 +121,11 @@ def SavedSongs():
                 audio = (sp.audio_features(tracks = track['id']))
                 audio = pd.DataFrame(audio)
                 audio = audio.reset_index(inplace=False)
+                
             except:
                 pass
+            
             trackfeatures = pd.concat([trackfeatures,audio],axis=0,ignore_index=True)
-         
             artist_name.append(track['artists'][0]['name'])
             artist_id.append(track['artists'][0]['id'])
             artist_num.append(len(track['artists']))
@@ -183,13 +184,7 @@ if st.button("Get saved songs"):
 
     st.write('Your favorite artist is: ',c)
     
-st.download_button(
-   "Press to Download Your Saved Songs",
-   b,
-   "savedsongs.csv",
-   "text/csv",
-   key='download-csv'
-)
+#
 
 st.write('---')
 st.header("Make Playlist")
