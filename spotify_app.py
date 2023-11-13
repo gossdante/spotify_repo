@@ -6,6 +6,8 @@ from spotipy.oauth2 import SpotifyOAuth
 import os
 import math
 import time
+import spotipy.util as util
+
 
 def NumSavedSongs():
     # Set scope
@@ -15,6 +17,168 @@ def NumSavedSongs():
     song = sp.current_user_saved_tracks(limit = 1, offset = 0, market = None)
     num_songs = song['total']
     return num_songs
+
+def CurrentFavorites():
+    # Initialize Variables
+    track_name = [] 
+    track_id = []
+    artist_name = []
+    artist_id = []
+    artist_num = []
+    track_len = []
+    # Set scope
+    scope = "user-library-read playlist-read-private playlist-modify-public playlist-modify-private"
+    # Authorize
+    sp = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope))
+    song = sp.current_user_top_tracks(limit = 20, offset = 0,time_range='short_term')
+
+    for item in song['items']:
+        track_name.append(item['name'])
+        track_id.append(item['id'])   
+        artist_name.append(item['artists'][0]['name'])
+        artist_id.append(item['artists'][0]['id'])
+        artist_num.append(len(item['artists']))
+        track_len.append(item['duration_ms']/1000)
+    # Convert to DF
+    Track_Name=pd.DataFrame(track_name,columns=['Track_Name'])
+    Track_ID=pd.DataFrame(track_id,columns=['Track_ID'])
+    Artist_Name=pd.DataFrame(artist_name,columns=['Artist_Name'])
+    Artist_ID=pd.DataFrame(artist_id,columns=['Artist_ID'])
+    Artist_Num=pd.DataFrame(artist_num,columns=['Artist_Num'])
+    Track_Len=pd.DataFrame(track_len,columns=['Track_Len'])
+    # Combine
+    df = pd.concat([Track_Name,Track_ID,Artist_Name,Artist_ID,Artist_Num,Track_Len],axis =1)
+    return df
+
+def CurrentFavorites_recommendations():
+    # Initialize Variables
+    track_name = [] 
+    track_id = []
+    artist_name = []
+    artist_id = []
+    artist_num = []
+    track_len = []
+    # Set scope
+    scope = "user-library-read playlist-read-private playlist-modify-public playlist-modify-private"
+    # Authorize
+    sp = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope))
+    song = sp.current_user_top_tracks(limit = 20, offset = 0,time_range='short_term')
+
+    for item in song['items']:
+        track_name.append(item['name'])
+        track_id.append(item['id'])   
+        artist_name.append(item['artists'][0]['name'])
+        artist_id.append(item['artists'][0]['id'])
+        artist_num.append(len(item['artists']))
+        track_len.append(item['duration_ms']/1000)
+    # Convert to DF
+    Track_Name=pd.DataFrame(track_name,columns=['Track_Name'])
+    Track_ID=pd.DataFrame(track_id,columns=['Track_ID'])
+    Artist_Name=pd.DataFrame(artist_name,columns=['Artist_Name'])
+    Artist_ID=pd.DataFrame(artist_id,columns=['Artist_ID'])
+    Artist_Num=pd.DataFrame(artist_num,columns=['Artist_Num'])
+    Track_Len=pd.DataFrame(track_len,columns=['Track_Len'])
+    # Combine
+    df = pd.concat([Track_Name,Track_ID,Artist_Name,Artist_ID,Artist_Num,Track_Len],axis =1)
+    track_list = df['Track_ID'].to_list()
+    # Get Recommendations
+    track_ids = []
+    idx = 0
+    while idx <19:
+        idx2 = idx+5
+        song = sp.recommendations(seed_tracks = track_list[idx:idx2],limit=25, time_range='short_range')
+        for item in song['tracks']:
+            track_ids.append(item['id'])
+        idx = idx + 5
+    return track_ids
+
+def CurrentFavorites_recommendations_tempo(low,high):
+    # Initialize Variables
+    track_name = [] 
+    track_id = []
+    artist_name = []
+    artist_id = []
+    artist_num = []
+    track_len = []
+    # Set scope
+    scope = "user-library-read playlist-read-private playlist-modify-public playlist-modify-private"
+    # Authorize
+    sp = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope))
+    song = sp.current_user_top_tracks(limit = 20, offset = 0,time_range='short_term')
+
+    for item in song['items']:
+        track_name.append(item['name'])
+        track_id.append(item['id'])   
+        artist_name.append(item['artists'][0]['name'])
+        artist_id.append(item['artists'][0]['id'])
+        artist_num.append(len(item['artists']))
+        track_len.append(item['duration_ms']/1000)
+    # Convert to DF
+    Track_Name=pd.DataFrame(track_name,columns=['Track_Name'])
+    Track_ID=pd.DataFrame(track_id,columns=['Track_ID'])
+    Artist_Name=pd.DataFrame(artist_name,columns=['Artist_Name'])
+    Artist_ID=pd.DataFrame(artist_id,columns=['Artist_ID'])
+    Artist_Num=pd.DataFrame(artist_num,columns=['Artist_Num'])
+    Track_Len=pd.DataFrame(track_len,columns=['Track_Len'])
+    # Combine
+    df = pd.concat([Track_Name,Track_ID,Artist_Name,Artist_ID,Artist_Num,Track_Len],axis =1)
+    track_list = df['Track_ID'].to_list()
+    # Get Recommendations
+    track_ids = []
+    idx = 0
+    while idx <19:
+        idx2 = idx+5
+        song = sp.recommendations(seed_tracks = track_list[idx:idx2], limit=25, time_range='short_range',
+                                  min_tempo = low,max_tempo = high)
+        for item in song['tracks']:
+            track_ids.append(item['id'])
+        idx = idx + 5
+    return track_ids
+
+def CurrentFavorites_recommendations_custom(low,high,min_energy,max_energy,min_dance,max_dance):
+    # Initialize Variables
+    track_name = [] 
+    track_id = []
+    artist_name = []
+    artist_id = []
+    artist_num = []
+    track_len = []
+    # Set scope
+    scope = "user-library-read playlist-read-private playlist-modify-public playlist-modify-private"
+    # Authorize
+    sp = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope))
+    song = sp.current_user_top_tracks(limit = 20, offset = 0,time_range='short_term')
+
+    for item in song['items']:
+        track_name.append(item['name'])
+        track_id.append(item['id'])   
+        artist_name.append(item['artists'][0]['name'])
+        artist_id.append(item['artists'][0]['id'])
+        artist_num.append(len(item['artists']))
+        track_len.append(item['duration_ms']/1000)
+    # Convert to DF
+    Track_Name=pd.DataFrame(track_name,columns=['Track_Name'])
+    Track_ID=pd.DataFrame(track_id,columns=['Track_ID'])
+    Artist_Name=pd.DataFrame(artist_name,columns=['Artist_Name'])
+    Artist_ID=pd.DataFrame(artist_id,columns=['Artist_ID'])
+    Artist_Num=pd.DataFrame(artist_num,columns=['Artist_Num'])
+    Track_Len=pd.DataFrame(track_len,columns=['Track_Len'])
+    # Combine
+    df = pd.concat([Track_Name,Track_ID,Artist_Name,Artist_ID,Artist_Num,Track_Len],axis =1)
+    track_list = df['Track_ID'].to_list()
+    # Get Recommendations
+    track_ids = []
+    idx = 0
+    while idx <19:
+        idx2 = idx+5
+        song = sp.recommendations(seed_tracks = track_list[idx:idx2], limit=25, time_range='short_range',
+                                  min_tempo = low,max_tempo = high,
+                                  min_energy = min_energy, max_energy = max_energy,
+                                  min_danceability = min_dance, max_danceability = max_dance)
+        for item in song['tracks']:
+            track_ids.append(item['id'])
+        idx = idx + 5
+    return track_ids
 
 # Make a function that will make a plus delta for tempos
 def LowHigh(target_tempo, range):
@@ -55,7 +219,7 @@ def PlaylistMaker(Tracks,name_input):
     playlist_id = p['id']
 
     # loop to add songs - note that only 100 songs can be added at a time
-    if len(Tracks) < 100:
+    if len(Tracks) <= 100:
         sp.user_playlist_add_tracks(user_id,playlist_id,tracks = Tracks, position = None)
         print("Playlist Made")
     elif len(Tracks) > 100:
@@ -76,75 +240,7 @@ def PlaylistMaker(Tracks,name_input):
                 sp.user_playlist_add_tracks(user_id, playlist_id, tracks = Tracks[firstval:secondval], position = None)
                 print("Playlist Made")
                 
-    # Make a function to get all saved songs 
-def SavedSongs():
-    import math
-    import time
-    # Now we need to make a loop that will go through all saved songs
-    # Set scope
-    scope = "user-library-read playlist-read-private playlist-modify-public playlist-modify-private"
-    # Authorize
-    sp = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope))
-    # Step 1: How many saved songs do we have?
-    # You can get this by doing a current_user_saved_tracks search
-    song = sp.current_user_saved_tracks(limit = 1, offset = 0, market = None)
-    num_songs = song['total']
-    # print('You have ',num_songs,'saved songs')
-
-    # Initialize Variables
-    track_name = [] 
-    track_id = []
-    artist_name = []
-    artist_id = []
-    artist_num = []
-    track_len = []
-    trackfeatures = pd.DataFrame(columns = ['danceability', 'energy', 'key', 'loudness', 'mode', 'speechiness',
-           'acousticness', 'instrumentalness', 'liveness', 'valence', 'tempo',
-           'type', 'id', 'uri', 'track_href', 'analysis_url', 'duration_ms',
-           'time_signature'])
-    # The limit for current_user_saved_tracks is 20, so we need to round up to the nearest multiple of 20
-    # in the math package the ceil function will round up
-    num_loops = math.ceil(num_songs/20)
-    
-    # Now make a big loop that will go through it all
-    for i in range(0,num_loops+1):
-        print((num_loops+1-i),'Loops Left')
-        result = sp.current_user_saved_tracks(limit = 20, offset = (i*20), market = None)
-        # sleep
-        time.sleep(10)# 5 second sleep
-        # Loop through saved tracks
-        for item in result['items']:
-            track = item['track']
-            track_name.append(track['name'])
-            track_id.append(track['id']) 
-            try: 
-                audio = (sp.audio_features(tracks = track['id']))
-                audio = pd.DataFrame(audio)
-                audio = audio.reset_index(inplace=False)
-                
-            except:
-                pass
-            
-            trackfeatures = pd.concat([trackfeatures,audio],axis=0,ignore_index=True)
-            artist_name.append(track['artists'][0]['name'])
-            artist_id.append(track['artists'][0]['id'])
-            artist_num.append(len(track['artists']))
-            track_len.append(track['duration_ms']/1000)
-    # Convert to DF
-    Track_Name=pd.DataFrame(track_name,columns=['Track_Name'])
-    Track_ID=pd.DataFrame(track_id,columns=['Track_ID'])
-    Artist_Name=pd.DataFrame(artist_name,columns=['Artist_Name'])
-    Artist_ID=pd.DataFrame(artist_id,columns=['Artist_ID'])
-    Artist_Num=pd.DataFrame(artist_num,columns=['Artist_Num'])
-    Track_Len=pd.DataFrame(track_len,columns=['Track_Len'])
-    # Combine
-    df = pd.concat([Track_Name,Track_ID,Artist_Name,Artist_ID,Artist_Num,Track_Len],axis =1)
-
-    # Now Merge with df
-    trackfeatures =trackfeatures.rename(columns={'id':'Track_ID'})
-    data = pd.merge(df,trackfeatures,on=['Track_ID'])
-    return data
-
+  
 
 # Make the app
 st.title('Spotify Tool')
@@ -167,32 +263,109 @@ os.environ["SPOTIPY_CLIENT_SECRET"] = client_secret
 os.environ["SPOTIPY_REDIRECT_URI"] = redirect
 
 st.write('---')
-st.header('Get Saved Songs')
-st.write('Press the button below to find out how many saved songs you have')
+st.header("Top Songs")
 
 if st.button("How many saved songs do you have?"):
     a = NumSavedSongs()
     st.write('You Have:',a,'Saved Songs')
 
-st.write('Press the button below to load in all your saved songs')
-
-if st.button("Get saved songs"):
-    b = SavedSongs()
-    b['count'] = 1
-    c = b.groupby('Artist_Name')['count'].sum()[0]
-    #st.write(((num_loops+1-i),'Loops Left'))
-
-    st.write('Your favorite artist is: ',c)
+if st.button('Press the button to get your 20 top songs at the moment'):
+    top_songs = CurrentFavorites()
+    top_tracks = top_songs['Track_ID']
+    st.write('Done!')
+    st.write('Your top song atm is:',top_songs['Track_Name'][0])
+    st.table(top_songs)
     
-#
+st.write('---')
+st.header("Make Playlist of your current top songs")
+playlist_name = st.text_input('What would you like to name the playlist?')
+if st.button('Make the playlist'):
+    top_songs = CurrentFavorites()
+    top_tracks = top_songs['Track_ID']
+    p = PlaylistMaker(top_tracks, playlist_name)
+    st.write('Done!')
+    st.table(top_songs)
+    
+st.write('---')
+st.header("Make Playlist with recommendations from your top songs")
+playlist_name2 = st.text_input('What would you like to name the playlist? ')
+if st.button('Are you ready?'):
+    tracks = CurrentFavorites_recommendations()
+    p2 = PlaylistMaker(tracks, playlist_name2)
+    st.write('Completed!')
+
 
 st.write('---')
-st.header("Make Playlist")
-tempo = st.text_input('What target tempo would you like? Remember to press enter.')
-tol = st.text_input('How much tolerance d you want? e.g. 2 bpm above and below is a tolerance of 4.')
-namep = st.text_input('What would you like to name yoxxur playlist?')
+st.header("Make Playlist with recommendations from your top songs using a tempo target")
+tempo = st.number_input('What target tempo would you like? Remember to press enter.')
+tol = st.number_input('What is an allowable tolerance? (eg 5bpm)')
+playlist_name3 = st.text_input('What would you like to name the playlist?  ')
+if st.button('Did you fill both inputs? Great lets go!'):
+    low,high = LowHigh(tempo,tol)
+    tempo_tracks = CurrentFavorites_recommendations_tempo(low,high)
+    p3 = PlaylistMaker(tempo_tracks, playlist_name3)
+    st.write('Check Spotify!')
 
-if st.button("Create Playlist"):
-    songs,tracks = TempoRange(b,tempo,tol)
-    p = PlaylistMaker(tracks,namep)
-    st.write('Check your spotify')
+
+st.write('---')
+st.header('(Mostly) Customizable playlist')
+#tempo2 = st.selectbox(
+#   "What target tempo would you like?",
+#   ("100",'105','110','115','120','125','130','135','140','145','150','155','160','165','170','175','180','185'),
+#   placeholder="None",
+#)
+#tol2 = st.selectbox(
+#    'What tolerance would you like?',
+#    ('1','2','3','4','5','6','7','8','9','10')
+#)
+#energy = st.slider('Select an energy',0.0,1.0,0.5,0.01)
+#dance = st.slider('Select a danceability',0.0,1.0,0.5,0.01)
+tempo2 = st.number_input('What target tempo would you like? Remember to press enter. ')
+tol2 = st.number_input('What is an allowable tolerance? (eg 5bpm) ')
+energyhighlow = st.selectbox(
+    'Would you like high energy or low energy?',
+    ('High Energy','Low Energy'),
+    placeholder='Please select an energy',
+)
+
+dancehighlow = st.selectbox(
+    'Would you like high or low danceability?',
+    ('High Danceability','Low Danceability'),
+    placeholder = 'Please select a danceability',
+)
+
+playlist_name4 = st.text_input('What would you like to name the playlist?   ')
+if st.button('Generate'):
+    low,high = LowHigh(tempo2,tol2)
+    if (energyhighlow == 'High Energy') & (dancehighlow == 'High Danceability'):
+        min_energy = 0.5
+        max_energy = 1.0
+        min_dance = 0.5
+        max_dance = 1.0
+        custom_tracks = CurrentFavorites_recommendations_custom(low,high,min_energy,max_energy,min_dance,max_dance)
+        p4 = PlaylistMaker(custom_tracks, playlist_name4)
+        st.write('Check Your Spotify!')
+    elif (energyhighlow == 'High Energy') & (dancehighlow == 'Low Danceability'):
+        min_energy = 0.5
+        max_energy = 1.0
+        min_dance = 0.0
+        max_dance = 0.5
+        custom_tracks = CurrentFavorites_recommendations_custom(low,high,min_energy,max_energy,min_dance,max_dance)
+        p4 = PlaylistMaker(custom_tracks, playlist_name4)
+        st.write('Check Your Spotify!')
+    elif (energyhighlow == 'Low Energy') & (dancehighlow == 'High Danceability'):
+        min_energy = 0.0
+        max_energy = 0.5
+        min_dance = 0.5
+        max_dance = 1.0
+        custom_tracks = CurrentFavorites_recommendations_custom(low,high,min_energy,max_energy,min_dance,max_dance)
+        p4 = PlaylistMaker(custom_tracks, playlist_name4)
+        st.write('Check Your Spotify!')
+    elif (energyhighlow == 'Low Energy') & (dancehighlow == 'Low Energy'):
+        min_energy = 0.0
+        max_energy = 0.5
+        min_dance = 0.0
+        max_dance = 0.5
+        custom_tracks = CurrentFavorites_recommendations_custom(low,high,min_energy,max_energy,min_dance,max_dance)
+        p4 = PlaylistMaker(custom_tracks, playlist_name4)
+        st.write('Check Your Spotify!')
