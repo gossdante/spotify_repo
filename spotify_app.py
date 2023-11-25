@@ -244,6 +244,8 @@ def PlaylistMaker(Tracks,name_input):
 
 # Make the app
 st.title('Spotify Tool')
+st.write('This is a streamlit app that allows you to gather your favorite songs, make them into a playlist, find new songs that fit your current vibe, and customize making new playlists based on tempo, danceability, and energy that are recommended based on your current favorites.')
+st.write('This app requires you have a spotify developer account which you can make at https://developer.spotify.com/ ')
 st.write('---')
 
 
